@@ -48,7 +48,7 @@ subprojects {
 val ktlint: Configuration by configurations.creating
 
 dependencies {
-    ktlint(Libraries.Ktlint.KTLINT) {
+    ktlint(Dependencies.KTLINT) {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
         }

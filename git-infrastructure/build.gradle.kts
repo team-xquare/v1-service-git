@@ -5,6 +5,12 @@ plugins {
     kotlin("plugin.jpa") version PluginVersions.JPA_PLUGIN_VERSION
 }
 
+dependencyManagement {
+    imports {
+        mavenBom(Dependencies.SPRING_CLOUD)
+    }
+}
+
 dependencies {
     implementation(project(":git-presentation"))
     implementation(project(":git-application"))
@@ -15,6 +21,7 @@ dependencies {
     implementationDependencies(Libraries.JDSL)
     implementationDependencies(Libraries.Jsoup)
     implementationDependencies(Libraries.Coroutine)
+    implementationDependencies(Libraries.CloudConfig)
 }
 
 allOpen {
