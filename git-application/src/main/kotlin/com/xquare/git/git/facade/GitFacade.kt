@@ -7,7 +7,7 @@ import com.xquare.git.git.usecase.FindAllGit
 import com.xquare.git.git.usecase.FindGitByCurrentUserId
 import com.xquare.git.git.usecase.SaveUsername
 import com.xquare.git.git.usecase.UpdateGit
-import com.xquare.git.user.usecase.getUserId
+import com.xquare.git.user.usecase.GetUserId
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,7 +17,7 @@ open class GitFacade(
     private val checkUsername: CheckUsername,
     private val findAllGit: FindAllGit,
     private val updateGit: UpdateGit,
-    private val getUserId: getUserId,
+    private val getUserId: GetUserId,
     private val findGitByCurrentUserId: FindGitByCurrentUserId
 ) {
     @Transactional(rollbackFor = [Exception::class])
