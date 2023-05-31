@@ -5,7 +5,7 @@ import com.xquare.git.git.spi.CommandGitPort
 import com.xquare.git.git.spi.QueryGitPort
 
 @UseCase
-class UpdateGit(
+class UpdateGitUseCase(
     private val queryGitPort: QueryGitPort,
     private val commandGitPort: CommandGitPort
 ) {
