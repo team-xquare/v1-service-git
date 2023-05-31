@@ -8,7 +8,7 @@ import com.xquare.git.user.spi.QueryUserPort
 import java.util.*
 
 @UseCase
-class FindGitByCurrentUserId(
+class FindGitByCurrentUserIdUseCase(
     private val queryGitPort: QueryGitPort,
     private val queryUserPort: QueryUserPort
 ) {

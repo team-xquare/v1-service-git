@@ -7,7 +7,7 @@ import com.xquare.git.git.spi.QueryGitPort
 import com.xquare.git.user.spi.QueryUserPort
 
 @UseCase
-class FindAllGit(
+class FindAllGitUseCase(
     private val queryGitPort: QueryGitPort,
     private val queryUserPort: QueryUserPort
 ) {
