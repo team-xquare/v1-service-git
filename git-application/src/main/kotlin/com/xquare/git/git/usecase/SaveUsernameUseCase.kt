@@ -7,7 +7,7 @@ import com.xquare.git.git.spi.QueryGitPort
 import java.util.*
 
 @UseCase
-class SaveUsername(
+class SaveUsernameUseCase(
     private val commandGitPort: CommandGitPort,
     private val queryGitPort: QueryGitPort
 ) {

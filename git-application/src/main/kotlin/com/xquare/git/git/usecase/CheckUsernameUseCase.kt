@@ -5,7 +5,7 @@ import com.xquare.git.git.exceptions.GitExceptions
 import com.xquare.git.git.spi.QueryGitPort
 
 @UseCase
-class CheckUsername(
+class CheckUsernameUseCase(
     private val queryGitPort: QueryGitPort
 ) {
     suspend fun execute(username: String) {
