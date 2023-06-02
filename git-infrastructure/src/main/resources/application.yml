@@ -17,4 +17,3 @@ spring:
       password: ${CLOUD_CONFIG_PASSWORD}
 server:
   shutdown: graceful
-
