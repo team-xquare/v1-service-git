@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.*
 
 @Component
@@ -31,10 +32,6 @@ class UserPersistenceAdapter(
             .onStatus(HttpStatus::isError) {
                 throw GlobalExceptions.BadRequest()
             }
-            .awaitBody<FindNameResponse>().let {
-                FindNameResponse(
-                    name = it.name
-                )
-            }
+            .awaitBody()
     }
 }
