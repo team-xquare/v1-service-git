@@ -7,7 +7,7 @@ import com.xquare.git.git.usecase.FindAllGit
 import com.xquare.git.git.usecase.FindGitByCurrentUserId
 import com.xquare.git.git.usecase.SaveUsernameUseCase
 import com.xquare.git.git.usecase.UpdateGit
-import com.xquare.git.user.usecase.GetUserId
+import com.xquare.git.user.usecase.GetUserIdUseCase
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,13 +17,13 @@ open class GitFacade(
     private val checkUsernameUseCase: CheckUsernameUseCase,
     private val findAllGit: FindAllGit,
     private val updateGit: UpdateGit,
-    private val getUserId: GetUserId,
+    private val getUserIdUseCase: GetUserIdUseCase,
     private val findGitByCurrentUserId: FindGitByCurrentUserId
 ) {
     @Transactional
     open suspend fun saveUsername(userId: String?, username: String) {
         checkUsernameUseCase.execute(username)
-        val uuid = getUserId.execute(userId)
+        val uuid = getUserIdUseCase.execute(userId)
         saveUsernameUseCase.execute(uuid, username)
     }
 
@@ -34,7 +34,7 @@ open class GitFacade(
 
     @Transactional
     open suspend fun findGitByCurrentUserId(userId: String?): FindUserElement {
-        val uuid = getUserId.execute(userId)
+        val uuid = getUserIdUseCase.execute(userId)
         return findGitByCurrentUserId.execute(uuid)
     }
 

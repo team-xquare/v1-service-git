@@ -5,7 +5,7 @@ import com.xquare.git.user.exceptions.UserExceptions
 import java.util.*
 
 @UseCase
-class GetUserId {
+class GetUserIdUseCase {
     fun execute(userId: String?): UUID {
         if (userId == null) {
             throw UserExceptions.UnAuthorized()
