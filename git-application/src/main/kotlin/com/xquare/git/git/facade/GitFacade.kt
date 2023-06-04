@@ -27,12 +27,10 @@ open class GitFacade(
         saveUsernameUseCase.execute(uuid, username)
     }
 
-    @Transactional
     open suspend fun findAllGit(): FindAllUserResponse {
         return findAllGit.execute()
     }
 
-    @Transactional
     open suspend fun findGitByCurrentUserId(userId: String?): FindUserElement {
         val uuid = getUserIdUseCase.execute(userId)
         return findGitByCurrentUserId.execute(uuid)
