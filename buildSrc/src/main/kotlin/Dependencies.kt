@@ -71,7 +71,15 @@ interface Libraries {
         override fun dependencies() = listOf(
             WEBFLUX to ImplementationType.IMPLEMENTATION,
             STARTER_VALIDATION to ImplementationType.IMPLEMENTATION,
-            SPRING_SECURITY to ImplementationType.IMPLEMENTATION
+            SPRING_SECURITY to ImplementationType.IMPLEMENTATION,
+        )
+    }
+
+    object CloudConfig : Libraries {
+        private const val CLOUD_CONFIG = "org.springframework.cloud:spring-cloud-config-client"
+
+        override fun dependencies() = listOf(
+            CLOUD_CONFIG to ImplementationType.IMPLEMENTATION
         )
     }
 
@@ -99,8 +107,9 @@ interface Libraries {
             KOTLINX_COROUTINE to ImplementationType.IMPLEMENTATION
         )
     }
+}
 
-    object Ktlint {
-        const val KTLINT = "com.pinterest:ktlint:${DependencyVersions.KTLINT_VERSION}"
-    }
+object Dependencies {
+    const val KTLINT = "com.pinterest:ktlint: ${DependencyVersions.KTLINT_VERSION}"
+    const val SPRING_CLOUD = "org.springframework.cloud:spring-cloud-dependencies:${DependencyVersions.SPRING_CLOUD_VERSION}"
 }
