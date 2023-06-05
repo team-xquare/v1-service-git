@@ -5,7 +5,6 @@ import com.linecorp.kotlinjdsl.query.HibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
 import com.linecorp.kotlinjdsl.singleQueryOrNull
-import com.xquare.git.git.dto.FindGithubUserResponse
 import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
 import com.xquare.git.global.exceptions.GlobalExceptions
@@ -117,7 +116,7 @@ class GitPersistenceAdapter(
         return text.substring(startIndex, endIndex).replace(",", "").toInt()
     }
 
-    override suspend fun getAvatarUrl(username: String): FindGithubUserResponse {
+    override suspend fun getAvatarUrl(username: String): String {
         return webClient.get().uri {
             it.scheme(scheme)
                 .host("api.github.com")
@@ -126,10 +125,6 @@ class GitPersistenceAdapter(
         }.retrieve()
             .onStatus(HttpStatus::isError) {
                 throw GlobalExceptions.BadRequest()
-            }.awaitBody<FindGithubUserResponse>().let {
-                FindGithubUserResponse(
-                    avatarUrl = it.avatarUrl
-                )
-            }
+            }.awaitBody()
     }
 }
