@@ -2,9 +2,9 @@ package com.xquare.git.persistence.git.spi
 
 import com.linecorp.kotlinjdsl.ReactiveQueryFactory
 import com.linecorp.kotlinjdsl.query.HibernateMutinyReactiveQueryFactory
+import com.linecorp.kotlinjdsl.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
-import com.linecorp.kotlinjdsl.singleQueryOrNull
 import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
 import com.xquare.git.global.exceptions.GlobalExceptions
@@ -59,14 +59,14 @@ class GitPersistenceAdapter(
     }
 
     override suspend fun getGitByUserId(userId: UUID): Git? {
-        val gitEntity = reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
-            reactiveQueryFactory.findByUserId(userId)
+        val gitEntity = reactiveQueryFactory.withFactory { _ ->
+            findByUserId(userId)
         }
         return gitEntity?.let { gitMapper.entityToDomain(it) }
     }
 
-    private suspend fun ReactiveQueryFactory.findByUserId(userId: UUID): GitEntity? {
-        return this.singleQueryOrNull<GitEntity> {
+    private suspend fun findByUserId(userId: UUID): GitEntity? {
+        return reactiveQueryFactory.singleQueryOrNull<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
@@ -76,14 +76,14 @@ class GitPersistenceAdapter(
     }
 
     override suspend fun getGitByUsername(username: String): Git? {
-        val gitEntity = reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
-            reactiveQueryFactory.findByUsername(username)
+        val gitEntity = reactiveQueryFactory.withFactory { _ ->
+            findByUsername(username)
         }
         return gitEntity?.let { gitMapper.entityToDomain(it) }
     }
 
-    private suspend fun ReactiveQueryFactory.findByUsername(username: String): GitEntity? {
-        return this.singleQueryOrNull<GitEntity> {
+    private suspend fun findByUsername(username: String): GitEntity? {
+        return reactiveQueryFactory.singleQueryOrNull<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
