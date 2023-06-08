@@ -20,7 +20,6 @@ open class GitFacade(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val findGitByCurrentUserId: FindGitByCurrentUserId
 ) {
-    @Transactional
     open suspend fun saveUsername(userId: String?, username: String) {
         checkUsernameUseCase.execute(username)
         val uuid = getUserIdUseCase.execute(userId)
