@@ -110,6 +110,5 @@ interface Libraries {
 }
 
 object Dependencies {
-    const val KTLINT = "com.pinterest:ktlint: ${DependencyVersions.KTLINT_VERSION}"
     const val SPRING_CLOUD = "org.springframework.cloud:spring-cloud-dependencies:${DependencyVersions.SPRING_CLOUD_VERSION}"
 }
