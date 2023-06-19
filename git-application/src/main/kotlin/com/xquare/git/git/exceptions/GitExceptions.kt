@@ -7,9 +7,12 @@ sealed class GitExceptions(
     override val errorMessage: String
 ) : BaseException(statusCode, errorMessage) {
 
+    class NotFound(message: String = NOT_FOUND) : GitExceptions(404, message)
+
     class AlreadyExists(message: String = ALREADY_EXISTS) : GitExceptions(409, message)
 
     companion object {
+        private const val NOT_FOUND = "Not Found"
         private const val ALREADY_EXISTS = "Already Exists"
     }
 }
