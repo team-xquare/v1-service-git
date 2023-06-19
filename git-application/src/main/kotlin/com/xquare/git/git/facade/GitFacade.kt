@@ -20,10 +20,10 @@ open class GitFacade(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val findGitByCurrentUserId: FindGitByCurrentUserId
 ) {
-    open suspend fun saveUsername(userId: String?, username: String) {
+    open suspend fun saveUsername(currentUserId: String?, username: String) {
         checkUsernameUseCase.execute(username)
-        val uuid = getUserIdUseCase.execute(userId)
-        saveUsernameUseCase.execute(uuid, username)
+        val userId = getUserIdUseCase.execute(currentUserId)
+        saveUsernameUseCase.execute(userId, username)
     }
 
     open suspend fun findAllGit(): FindAllUserResponse {
