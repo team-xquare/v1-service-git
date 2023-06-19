@@ -32,6 +32,13 @@ class GitPersistenceAdapter(
     private val scheme: String
 ) : GitPort {
 
+    companion object {
+        const val URL = "https://github.com"
+        const val TEXT = "div.js-yearly-contributions h2"
+        const val START_TAG = "<h2 class=\"f4 text-normal mb-2\">"
+        const val END_TAG = "contributions in the last year</h2>"
+    }
+
     override suspend fun saveUser(git: Git) {
         val gitEntity = gitMapper.domainToEntity(git)
         reactiveQueryFactory.transactionWithFactory { session, _ ->
@@ -106,11 +113,11 @@ class GitPersistenceAdapter(
     }
 
     override suspend fun getContributionCount(username: String): Int {
-        val url = "https://github.com/$username"
+        val url = "$URL/$username"
         val docs = Jsoup.connect(url).get()
-        val text = docs.select("div.js-yearly-contributions h2").toString()
-        val startTag = "<h2 class=\"f4 text-normal mb-2\">"
-        val endTag = " contributions in the last year</h2>"
+        val text = docs.select(TEXT).toString()
+        val startTag = START_TAG
+        val endTag = END_TAG
         val startIndex = text.indexOf(startTag) + startTag.length
         val endIndex = text.indexOf(endTag)
         return text.substring(startIndex, endIndex).replace(",", "").toInt()
