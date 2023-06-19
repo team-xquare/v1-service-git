@@ -130,8 +130,11 @@ class GitPersistenceAdapter(
                 .path("/users/{username}")
                 .build(username)
         }.retrieve()
-            .onStatus(HttpStatus::isError) {
+            .onStatus(HttpStatus::is4xxClientError) {
                 throw GlobalExceptions.BadRequest()
-            }.awaitBody()
+            }.onStatus(HttpStatus::is5xxServerError) {
+                throw GlobalExceptions.InternalServerError()
+            }
+            .awaitBody()
     }
 }
