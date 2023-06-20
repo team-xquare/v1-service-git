@@ -12,7 +12,7 @@ class SaveUsernameUseCase(
     private val queryGitPort: QueryGitPort
 ) {
     suspend fun execute(currentUserId: UUID, username: String) {
-        val avatarUrl = queryGitPort.getAvatarUrl(username)
+        val avatarUrl = queryGitPort.getAvatarUrl(username).avatarUrl
         val contributions = queryGitPort.getContributionCount(username)
 
         commandGitPort.saveUser(
