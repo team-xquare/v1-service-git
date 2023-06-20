@@ -12,18 +12,19 @@ class FindAllGitUseCase(
     private val queryUserPort: QueryUserPort
 ) {
     suspend fun execute(): FindAllUserResponse {
-        val response = queryGitPort.getAllGit()
-            .map {
-                val name = queryUserPort.getName(it.userId).name
-                FindUserElement(
-                    userId = it.userId,
-                    name = name,
-                    username = it.username,
-                    avatarUrl = it.avatarUrl,
-                    contributions = it.contributions
-                )
-            }
+        val gitInfoList = queryGitPort.getAllGit()
+        val userIds = gitInfoList.map { it.userId }
+        val gitUserInfoList = queryUserPort.getAllUserInfo(userIds).userList
 
+        val response = gitInfoList.map {
+            FindUserElement(
+                userId = it.userId,
+                name = gitUserInfoList.single { gitInfo -> gitInfo.id == it.userId }.name,
+                username = it.username,
+                avatarUrl = it.avatarUrl,
+                contributions = it.contributions
+            )
+        }
         return FindAllUserResponse(response)
     }
 }
