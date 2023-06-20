@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.util.*
 
 data class FindAllUserResponse(
-    val users: List<FindUserElement>
+    val users: List<FindUserElement>,
 ): Serializable
 
 data class FindUserElement(
@@ -12,5 +12,5 @@ data class FindUserElement(
     val name: String,
     val username: String,
     val avatarUrl: String,
-    val contributions: Int
+    val contributions: Int,
 )

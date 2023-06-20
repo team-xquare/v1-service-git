@@ -9,7 +9,7 @@ import com.xquare.git.user.spi.QueryUserPort
 @UseCase
 class FindAllGitUseCase(
     private val queryGitPort: QueryGitPort,
-    private val queryUserPort: QueryUserPort
+    private val queryUserPort: QueryUserPort,
 ) {
     suspend fun execute(): FindAllUserResponse {
         val gitInfoList = queryGitPort.getAllGit()
@@ -22,7 +22,7 @@ class FindAllGitUseCase(
                 name = gitUserInfoList.single { gitInfo -> gitInfo.id == it.userId }.name,
                 username = it.username,
                 avatarUrl = it.avatarUrl,
-                contributions = it.contributions
+                contributions = it.contributions,
             )
         }
         return FindAllUserResponse(response)

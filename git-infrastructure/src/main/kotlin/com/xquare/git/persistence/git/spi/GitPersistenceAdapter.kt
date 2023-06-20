@@ -136,7 +136,7 @@ class GitPersistenceAdapter(
             }
             .awaitBody<FindUserAvatarUrlResponse>().let {
                 FindAvatarUrlResponse(
-                    avatarUrl = it.avatarUrl
+                    avatarUrl = it.avatarUrl,
                 )
             }
     }

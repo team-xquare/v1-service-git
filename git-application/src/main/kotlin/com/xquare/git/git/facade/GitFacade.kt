@@ -18,7 +18,7 @@ open class GitFacade(
     private val findAllGit: FindAllGitUseCase,
     private val updateGit: UpdateGitUseCase,
     private val getUserIdUseCase: GetUserIdUseCase,
-    private val findGitByCurrentUserId: FindGitByCurrentUserIdUseCase
+    private val findGitByCurrentUserId: FindGitByCurrentUserIdUseCase,
 ) {
     open suspend fun saveUsername(currentUserId: String?, username: String) {
         checkUsernameUseCase.execute(username)
