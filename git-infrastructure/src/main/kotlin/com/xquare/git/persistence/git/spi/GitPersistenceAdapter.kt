@@ -5,11 +5,13 @@ import com.linecorp.kotlinjdsl.query.HibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
+import com.xquare.git.git.dto.FindAvatarUrlResponse
 import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
 import com.xquare.git.global.exceptions.GlobalExceptions
 import com.xquare.git.persistence.git.mapper.GitMapper
 import com.xquare.git.persistence.git.model.GitEntity
+import com.xquare.git.persistence.git.spi.dto.FindUserAvatarUrlResponse
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -114,16 +116,13 @@ class GitPersistenceAdapter(
 
     override suspend fun getContributionCount(username: String): Int {
         val url = "$URL/$username"
-        val docs = Jsoup.connect(url).get()
-        val text = docs.select(TEXT).toString()
-        val startTag = START_TAG
-        val endTag = END_TAG
-        val startIndex = text.indexOf(startTag) + startTag.length
-        val endIndex = text.indexOf(endTag)
-        return text.substring(startIndex, endIndex).replace(",", "").toInt()
+        val text = Jsoup.connect(url).get().select(TEXT).toString()
+        val startIndex = text.indexOf(START_TAG) + START_TAG.length
+        val endIndex = text.indexOf(END_TAG)
+        return text.substring(startIndex, endIndex).replace(Regex("\\D"), "").toInt()
     }
 
-    override suspend fun getAvatarUrl(username: String): String {
+    override suspend fun getAvatarUrl(username: String): FindAvatarUrlResponse {
         return webClient.get().uri {
             it.scheme(scheme)
                 .host("api.github.com")
@@ -135,6 +134,10 @@ class GitPersistenceAdapter(
             }.onStatus(HttpStatus::is5xxServerError) {
                 throw GlobalExceptions.InternalServerError()
             }
-            .awaitBody()
+            .awaitBody<FindUserAvatarUrlResponse>().let {
+                FindAvatarUrlResponse(
+                    avatarUrl = it.avatarUrl
+                )
+            }
     }
 }
