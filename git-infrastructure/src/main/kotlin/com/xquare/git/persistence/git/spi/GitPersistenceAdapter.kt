@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
 @Component
@@ -123,12 +124,15 @@ class GitPersistenceAdapter(
     }
 
     override suspend fun getAvatarUrl(username: String): FindAvatarUrlResponse {
-        return webClient.get().uri {
-            it.scheme(scheme)
-                .host("api.github.com")
-                .path("/users/{username}")
-                .build(username)
-        }.retrieve()
+        val uri = UriComponentsBuilder.newInstance()
+            .scheme(scheme)
+            .host("api.github.com")
+            .path("/users/{username}")
+            .build(username)
+
+        return webClient.get()
+            .uri(uri)
+            .retrieve()
             .onStatus(HttpStatus::is4xxClientError) {
                 throw GlobalExceptions.BadRequest()
             }.onStatus(HttpStatus::is5xxServerError) {
