@@ -3,7 +3,7 @@ package com.xquare.git.user.dto
 import java.util.*
 
 data class FindUserListResponse(
-    val userList: List<FindUserInfoElement>,
+    val users: List<FindUserInfoElement>,
 )
 
 data class FindUserInfoElement(
