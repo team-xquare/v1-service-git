@@ -5,7 +5,6 @@ import com.linecorp.kotlinjdsl.query.HibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
-import com.xquare.git.git.dto.FindAvatarUrlResponse
 import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
 import com.xquare.git.global.exceptions.GlobalExceptions
@@ -123,7 +122,7 @@ class GitPersistenceAdapter(
         return text.substring(startIndex, endIndex).replace(Regex("\\D"), "").toInt()
     }
 
-    override suspend fun getAvatarUrl(username: String): FindAvatarUrlResponse {
+    override suspend fun getAvatarUrl(username: String): String {
         val uri = UriComponentsBuilder.newInstance()
             .scheme(scheme)
             .host("api.github.com")
@@ -138,10 +137,6 @@ class GitPersistenceAdapter(
             }.onStatus(HttpStatus::is5xxServerError) {
                 throw GlobalExceptions.InternalServerError()
             }
-            .awaitBody<FindUserAvatarUrlResponse>().let {
-                FindAvatarUrlResponse(
-                    avatarUrl = it.avatarUrl,
-                )
-            }
+            .awaitBody<FindUserAvatarUrlResponse>().avatarUrl
     }
 }

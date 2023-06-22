@@ -13,7 +13,7 @@ class UpdateGitUseCase(
         queryGitPort.getAllGit()
             .map {
                 val updateContribution = queryGitPort.getContributionCount(it.username)
-                val updateAvatarUrl = queryGitPort.getAvatarUrl(it.username).avatarUrl
+                val updateAvatarUrl = queryGitPort.getAvatarUrl(it.username)
                 val updateGit = it.updateGit(updateAvatarUrl, updateContribution)
                 commandGitPort.updateGit(updateGit)
             }
