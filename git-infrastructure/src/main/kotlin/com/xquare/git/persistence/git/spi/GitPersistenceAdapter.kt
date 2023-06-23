@@ -7,7 +7,6 @@ import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
 import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
-import com.xquare.git.global.exceptions.GlobalExceptions
 import com.xquare.git.persistence.git.mapper.GitMapper
 import com.xquare.git.persistence.git.model.GitEntity
 import com.xquare.git.persistence.git.spi.dto.FindUserAvatarUrlResponse
@@ -17,7 +16,6 @@ import kotlinx.coroutines.launch
 import org.hibernate.reactive.mutiny.Mutiny.Session
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -132,11 +130,6 @@ class GitPersistenceAdapter(
         return webClient.get()
             .uri(uri)
             .retrieve()
-            .onStatus(HttpStatus::is4xxClientError) {
-                throw GlobalExceptions.BadRequest()
-            }.onStatus(HttpStatus::is5xxServerError) {
-                throw GlobalExceptions.InternalServerError()
-            }
             .awaitBody<FindUserAvatarUrlResponse>().avatarUrl
     }
 }

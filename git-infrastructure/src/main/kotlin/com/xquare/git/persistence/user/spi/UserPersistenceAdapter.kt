@@ -1,12 +1,10 @@
 package com.xquare.git.persistence.user.spi
 
 import com.xquare.git.git.dto.FindUserInfoRequest
-import com.xquare.git.global.exceptions.GlobalExceptions
 import com.xquare.git.user.dto.FindUserInfoElement
 import com.xquare.git.user.dto.FindUserListResponse
 import com.xquare.git.user.spi.UserPort
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -34,13 +32,6 @@ class UserPersistenceAdapter(
         return webClient.get()
             .uri(uri)
             .retrieve()
-            .onStatus(HttpStatus::isError) {
-                println(it.statusCode())
-                throw GlobalExceptions.BadRequest()
-            }
-            .onStatus(HttpStatus::is5xxServerError) {
-                throw GlobalExceptions.InternalServerError()
-            }
             .awaitBody()
     }
 
@@ -56,12 +47,6 @@ class UserPersistenceAdapter(
             .uri(uri)
             .bodyValue(findUserInfoRequest)
             .retrieve()
-            .onStatus(HttpStatus::is4xxClientError) {
-                throw GlobalExceptions.BadRequest()
-            }
-            .onStatus(HttpStatus::is5xxServerError) {
-                throw GlobalExceptions.InternalServerError()
-            }
             .awaitBody()
     }
 }

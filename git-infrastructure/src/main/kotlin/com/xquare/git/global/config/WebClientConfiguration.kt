@@ -1,6 +1,7 @@
 package com.xquare.git.global.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.xquare.git.global.exceptions.GlobalExceptions
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.codec.ClientCodecConfigurer
@@ -8,6 +9,7 @@ import org.springframework.http.codec.json.Jackson2JsonDecoder
 import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.core.publisher.Mono
 
 @Configuration
 class WebClientConfiguration {
@@ -22,5 +24,17 @@ class WebClientConfiguration {
                     }
                     .build()
             )
+            .filter { clientRequest, next ->
+                next.exchange(clientRequest)
+                    .flatMap { clientResponse ->
+                        if (clientResponse.statusCode().is4xxClientError) {
+                            Mono.error(GlobalExceptions.BadRequest())
+                        } else if (clientResponse.statusCode().is5xxServerError) {
+                            Mono.error(GlobalExceptions.InternalServerError())
+                        } else {
+                            Mono.just(clientResponse)
+                        }
+                    }
+            }
             .build()
 }
