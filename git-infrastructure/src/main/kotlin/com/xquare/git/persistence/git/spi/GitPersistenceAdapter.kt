@@ -7,19 +7,19 @@ import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
 import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
-import com.xquare.git.global.exceptions.GlobalExceptions
 import com.xquare.git.persistence.git.mapper.GitMapper
 import com.xquare.git.persistence.git.model.GitEntity
+import com.xquare.git.persistence.git.spi.dto.FindUserAvatarUrlResponse
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.hibernate.reactive.mutiny.Mutiny.Session
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
+import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
 @Component
@@ -114,27 +114,22 @@ class GitPersistenceAdapter(
 
     override suspend fun getContributionCount(username: String): Int {
         val url = "$URL/$username"
-        val docs = Jsoup.connect(url).get()
-        val text = docs.select(TEXT).toString()
-        val startTag = START_TAG
-        val endTag = END_TAG
-        val startIndex = text.indexOf(startTag) + startTag.length
-        val endIndex = text.indexOf(endTag)
-        return text.substring(startIndex, endIndex).replace(",", "").toInt()
+        val text = Jsoup.connect(url).get().select(TEXT).toString()
+        val startIndex = text.indexOf(START_TAG) + START_TAG.length
+        val endIndex = text.indexOf(END_TAG)
+        return text.substring(startIndex, endIndex).replace(Regex("\\D"), "").toInt()
     }
 
     override suspend fun getAvatarUrl(username: String): String {
-        return webClient.get().uri {
-            it.scheme(scheme)
-                .host("api.github.com")
-                .path("/users/{username}")
-                .build(username)
-        }.retrieve()
-            .onStatus(HttpStatus::is4xxClientError) {
-                throw GlobalExceptions.BadRequest()
-            }.onStatus(HttpStatus::is5xxServerError) {
-                throw GlobalExceptions.InternalServerError()
-            }
-            .awaitBody()
+        val uri = UriComponentsBuilder.newInstance()
+            .scheme(scheme)
+            .host("api.github.com")
+            .path("/users/{username}")
+            .build(username)
+
+        return webClient.get()
+            .uri(uri)
+            .retrieve()
+            .awaitBody<FindUserAvatarUrlResponse>().avatarUrl
     }
 }
