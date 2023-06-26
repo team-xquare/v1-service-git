@@ -14,14 +14,14 @@ class FindGitByCurrentUserIdUseCase(
 ) {
     suspend fun execute(userId: UUID): FindUserElement {
         val gitUserInfo = queryGitPort.getGitByUserId(userId) ?: throw GitExceptions.NotFound()
-        return gitUserInfo.let {
-            FindUserElement(
-                userId = it.userId,
-                name = queryUserPort.getName(it.userId).name,
-                username = it.username,
-                avatarUrl = it.avatarUrl,
-                contributions = it.contributions
-            )
-        }
+        val nameAndProfileFileName = queryUserPort.getNameAndProfileFileName(userId)
+        
+        return FindUserElement(
+            userId = gitUserInfo.userId,
+            name = nameAndProfileFileName.name,
+            username = gitUserInfo.username,
+            profileFileName = nameAndProfileFileName.profileFileName,
+            contributions = gitUserInfo.contributions
+        )
     }
 }
