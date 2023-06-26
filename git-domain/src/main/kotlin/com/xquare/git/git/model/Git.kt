@@ -7,12 +7,10 @@ import java.util.*
 data class Git(
     val userId: UUID,
     val username: String,
-    val avatarUrl: String,
     val contributions: Int
 ) {
-    fun updateGit(avatarUrl: String, contributions: Int): Git {
+    fun updateGit(contributions: Int): Git {
         return copy(
-            avatarUrl = avatarUrl,
             contributions = contributions
         )
     }
