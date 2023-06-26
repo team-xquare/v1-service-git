@@ -10,11 +10,14 @@ import com.xquare.git.git.spi.GitPort
 import com.xquare.git.persistence.git.mapper.GitMapper
 import com.xquare.git.persistence.git.model.GitEntity
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.hibernate.reactive.mutiny.Mutiny.Session
 import org.jsoup.Jsoup
@@ -37,6 +40,8 @@ class GitPersistenceAdapter(
         const val START_TAG = "<h2 class=\"f4 text-normal mb-2\">"
         const val END_TAG = "contributions in the last year</h2>"
     }
+
+    private val scope = CoroutineScope(Dispatchers.IO + Job())
 
     override suspend fun saveUser(git: Git) {
         val gitEntity = gitMapper.domainToEntity(git)
@@ -111,7 +116,7 @@ class GitPersistenceAdapter(
         }
     }
 
-    override suspend fun getContributionCount(username: String): Int = coroutineScope {
+    override suspend fun getContributionCount(username: String): Int {
         val url = "$URL/$username"
         val text = withContext(Dispatchers.IO) {
             Jsoup.connect(url).get().select(TEXT).toString()
@@ -120,13 +125,13 @@ class GitPersistenceAdapter(
         val endIndex = text.indexOf(END_TAG)
         val contributionText = text.substring(startIndex, endIndex).replace(Regex("\\D"), "")
 
-        contributionText.toInt()
+        return contributionText.toInt()
     }
 
-    override suspend fun updateContributionCount(gitAllInfo: List<Git>): Map<UUID, Int> = coroutineScope {
+    override suspend fun updateContributionCount(gitAllInfo: List<Git>): Map<UUID, Int> = runBlocking {
         val updateContributionCount = mutableMapOf<UUID, Int>()
         val deferredResults = gitAllInfo.map { git ->
-            async {
+            scope.async {
                 val contribution = getContributionCount(git.username)
                 git.userId to contribution
             }
