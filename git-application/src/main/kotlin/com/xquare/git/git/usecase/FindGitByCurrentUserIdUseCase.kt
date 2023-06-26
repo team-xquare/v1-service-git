@@ -10,18 +10,18 @@ import java.util.*
 @UseCase
 class FindGitByCurrentUserIdUseCase(
     private val queryGitPort: QueryGitPort,
-    private val queryUserPort: QueryUserPort
+    private val queryUserPort: QueryUserPort,
 ) {
     suspend fun execute(userId: UUID): FindUserElement {
         val gitUserInfo = queryGitPort.getGitByUserId(userId) ?: throw GitExceptions.NotFound()
         val nameAndProfileFileName = queryUserPort.getNameAndProfileFileName(userId)
-        
+
         return FindUserElement(
             userId = gitUserInfo.userId,
             name = nameAndProfileFileName.name,
             username = gitUserInfo.username,
             profileFileName = nameAndProfileFileName.profileFileName,
-            contributions = gitUserInfo.contributions
+            contributions = gitUserInfo.contributions,
         )
     }
 }
