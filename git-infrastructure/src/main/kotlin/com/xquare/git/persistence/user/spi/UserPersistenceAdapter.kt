@@ -22,7 +22,7 @@ class UserPersistenceAdapter(
     private val scheme: String
 ): UserPort {
 
-    override suspend fun getName(userId: UUID): FindUserInfoElement {
+    override suspend fun getNameAndProfileFileName(userId: UUID): FindUserInfoElement {
         val uri = UriComponentsBuilder.newInstance()
             .scheme(scheme)
             .host(userHost)

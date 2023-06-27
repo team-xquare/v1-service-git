@@ -18,13 +18,14 @@ class FindAllGitUseCase(
         val userInfoRequest = FindUserInfoRequest(userIds)
         val gitUserInfoList = queryUserPort.getAllUserInfo(userInfoRequest).users
 
-        val response = gitInfoList.map {
+        val response = gitInfoList.map { gitInfo ->
+            val userInfo = gitUserInfoList.single { git -> git.id == gitInfo.userId }
             FindUserElement(
-                userId = it.userId,
-                name = gitUserInfoList.single { gitInfo -> gitInfo.id == it.userId }.name,
-                username = it.username,
-                avatarUrl = it.avatarUrl,
-                contributions = it.contributions,
+                userId = gitInfo.userId,
+                name = userInfo.name,
+                username = gitInfo.username,
+                profileFileName = userInfo.profileFileName,
+                contributions = gitInfo.contributions,
             )
         }
         return FindAllUserResponse(response)

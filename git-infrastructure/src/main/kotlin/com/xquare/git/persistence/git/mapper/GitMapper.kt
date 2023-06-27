@@ -11,7 +11,6 @@ class GitMapper {
             Git(
                 userId = userId,
                 username = username,
-                avatarUrl = avatarUrl,
                 contributions = contributions
             )
         }
@@ -22,7 +21,6 @@ class GitMapper {
             GitEntity(
                 userId = userId,
                 username = username,
-                avatarUrl = avatarUrl,
                 contributions = contributions
             )
         }

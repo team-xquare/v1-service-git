@@ -8,5 +8,4 @@ interface QueryGitPort {
     suspend fun getGitByUserId(userId: UUID): Git?
     suspend fun getGitByUsername(username: String): Git?
     suspend fun getContributionCount(username: String): Int
-    suspend fun getAvatarUrl(username: String): String
 }

@@ -9,25 +9,27 @@ import com.xquare.git.git.model.Git
 import com.xquare.git.git.spi.GitPort
 import com.xquare.git.persistence.git.mapper.GitMapper
 import com.xquare.git.persistence.git.model.GitEntity
-import com.xquare.git.persistence.git.spi.dto.FindUserAvatarUrlResponse
 import io.smallrye.mutiny.coroutines.awaitSuspending
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.hibernate.reactive.mutiny.Mutiny.Session
 import org.jsoup.Jsoup
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.awaitBody
-import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
 @Component
 class GitPersistenceAdapter(
     private val reactiveQueryFactory: HibernateMutinyReactiveQueryFactory,
     private val gitMapper: GitMapper,
-    private val webClient: WebClient,
-    
+
     @Value("\${service.scheme}")
     private val scheme: String
 ) : GitPort {
@@ -38,6 +40,8 @@ class GitPersistenceAdapter(
         const val START_TAG = "<h2 class=\"f4 text-normal mb-2\">"
         const val END_TAG = "contributions in the last year</h2>"
     }
+
+    private val scope = CoroutineScope(Dispatchers.IO + Job())
 
     override suspend fun saveUser(git: Git) {
         val gitEntity = gitMapper.domainToEntity(git)
@@ -114,22 +118,29 @@ class GitPersistenceAdapter(
 
     override suspend fun getContributionCount(username: String): Int {
         val url = "$URL/$username"
-        val text = Jsoup.connect(url).get().select(TEXT).toString()
+        val text = withContext(Dispatchers.IO) {
+            Jsoup.connect(url).get().select(TEXT).toString()
+        }
         val startIndex = text.indexOf(START_TAG) + START_TAG.length
         val endIndex = text.indexOf(END_TAG)
-        return text.substring(startIndex, endIndex).replace(Regex("\\D"), "").toInt()
+        val contributionText = text.substring(startIndex, endIndex).replace(Regex("\\D"), "")
+
+        return contributionText.toInt()
     }
 
-    override suspend fun getAvatarUrl(username: String): String {
-        val uri = UriComponentsBuilder.newInstance()
-            .scheme(scheme)
-            .host("api.github.com")
-            .path("/users/{username}")
-            .build(username)
+    override suspend fun updateContributionCount(gitAllInfo: List<Git>): Map<UUID, Int> = runBlocking {
+        val updateContributionCount = mutableMapOf<UUID, Int>()
+        val deferredResults = gitAllInfo.map { git ->
+            scope.async {
+                val contribution = getContributionCount(git.username)
+                git.userId to contribution
+            }
+        }
 
-        return webClient.get()
-            .uri(uri)
-            .retrieve()
-            .awaitBody<FindUserAvatarUrlResponse>().avatarUrl
+        deferredResults.awaitAll().forEach { (userId, contribution) ->
+            updateContributionCount[userId] = contribution
+        }
+
+        updateContributionCount
     }
 }
