@@ -13,4 +13,5 @@ data class FindUserElement(
     val username: String,
     val profileFileName: String?,
     val contributions: Int,
+    val ranking: Int,
 )

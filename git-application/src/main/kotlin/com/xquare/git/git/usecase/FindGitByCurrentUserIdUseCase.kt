@@ -22,6 +22,7 @@ class FindGitByCurrentUserIdUseCase(
             username = gitUserInfo.username,
             profileFileName = nameAndProfileFileName.profileFileName,
             contributions = gitUserInfo.contributions,
+            ranking = gitUserInfo.ranking,
         )
     }
 }

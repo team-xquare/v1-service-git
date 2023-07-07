@@ -18,7 +18,8 @@ class SaveUsernameUseCase(
             Git(
                 userId = currentUserId,
                 username = username,
-                contributions = contributions
+                contributions = contributions,
+                ranking = 0
             )
         )
     }

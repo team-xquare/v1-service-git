@@ -19,9 +19,15 @@ class GitEntity(
     val username: String,
 
     contributions: Int,
+
+    ranking: Int,
 ) {
 
     @field: NotNull
     var contributions: Int = contributions
+        protected set
+
+    @field: NotNull
+    var ranking: Int = ranking
         protected set
 }

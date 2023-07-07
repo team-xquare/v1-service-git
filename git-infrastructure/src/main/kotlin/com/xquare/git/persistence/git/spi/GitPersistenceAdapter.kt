@@ -56,6 +56,12 @@ class GitPersistenceAdapter(
         }
     }
 
+    override suspend fun getAllGitByContributionCount(): List<Git> {
+        return reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
+            reactiveQueryFactory.findAllByContributionCount()
+        }.map { gitMapper.entityToDomain(it) }
+    }
+
     override suspend fun getAllGit(): List<Git> {
         return reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
             reactiveQueryFactory.findAll()
@@ -66,6 +72,14 @@ class GitPersistenceAdapter(
         return this.selectQuery<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
+        }.resultList()
+    }
+
+    private suspend fun ReactiveQueryFactory.findAllByContributionCount(): List<GitEntity> {
+        return this.selectQuery<GitEntity> {
+            select(entity(GitEntity::class))
+            from(entity(GitEntity::class))
+            orderBy(col(GitEntity::contributions).desc())
         }.resultList()
     }
 
