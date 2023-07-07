@@ -1,4 +1,4 @@
-package com.xquare.git.git
+package com.xquare.git
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

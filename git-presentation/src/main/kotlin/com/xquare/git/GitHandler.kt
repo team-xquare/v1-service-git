@@ -1,4 +1,4 @@
-package com.xquare.git.git
+package com.xquare.git
 
 import com.xquare.git.git.dto.FindAllUserResponse
 import com.xquare.git.git.dto.FindUserElement
