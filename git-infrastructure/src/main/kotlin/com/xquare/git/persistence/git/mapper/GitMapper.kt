@@ -12,7 +12,7 @@ class GitMapper {
                 userId = userId,
                 username = username,
                 contributions = contributions,
-                ranking = ranking
+                ranking = ranking,
             )
         }
     }
@@ -23,7 +23,7 @@ class GitMapper {
                 userId = userId,
                 username = username,
                 contributions = contributions,
-                ranking = ranking
+                ranking = ranking,
             )
         }
     }

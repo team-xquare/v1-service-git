@@ -9,7 +9,7 @@ import java.util.*
 @UseCase
 class SaveUsernameUseCase(
     private val commandGitPort: CommandGitPort,
-    private val queryGitPort: QueryGitPort
+    private val queryGitPort: QueryGitPort,
 ) {
     suspend fun execute(currentUserId: UUID, username: String) {
         val contributions = queryGitPort.getContributionCount(username)
@@ -19,7 +19,7 @@ class SaveUsernameUseCase(
                 userId = currentUserId,
                 username = username,
                 contributions = contributions,
-                ranking = 0
+                ranking = 0,
             )
         )
     }
