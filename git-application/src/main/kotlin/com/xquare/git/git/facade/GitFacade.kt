@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 open class GitFacade(
     private val saveUsernameUseCase: SaveUsernameUseCase,
     private val checkUsernameUseCase: CheckUsernameUseCase,
-    private val findAllGit: FindAllGitUseCase,
-    private val updateGit: UpdateGitUseCase,
+    private val findAllGitUseCase: FindAllGitUseCase,
+    private val updateGitUseCase: UpdateGitUseCase,
     private val getUserIdUseCase: GetUserIdUseCase,
     private val findGitByCurrentUserId: FindGitByCurrentUserIdUseCase,
 ) {
@@ -27,7 +27,7 @@ open class GitFacade(
     }
 
     open suspend fun findAllGit(): FindAllUserResponse {
-        return findAllGit.execute()
+        return findAllGitUseCase.execute()
     }
 
     open suspend fun findGitByCurrentUserId(currentUserId: String?): FindUserElement {
@@ -37,6 +37,6 @@ open class GitFacade(
 
     @Transactional
     open suspend fun updateContributions() {
-        updateGit.execute()
+        updateGitUseCase.execute()
     }
 }

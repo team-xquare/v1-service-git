@@ -26,6 +26,7 @@ class FindAllGitUseCase(
                 username = gitInfo.username,
                 profileFileName = userInfo.profileFileName,
                 contributions = gitInfo.contributions,
+                ranking = gitInfo.ranking,
             )
         }
         return FindAllUserResponse(response)

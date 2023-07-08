@@ -11,13 +11,13 @@ class UpdateGitUseCase(
     private val commandGitPort: CommandGitPort
 ) {
     suspend fun execute() {
-        val gitAllInfo = queryGitPort.getAllGit()
+        val gitAllInfo = queryGitPort.getAllGitByContributionCount()
         val updateContributionMap = commandGitPort.updateContributionCount(gitAllInfo)
 
-        gitAllInfo.forEach { git ->
-            val updateContribution = updateContributionMap[git.userId] ?: throw GitExceptions.NotFound()
-            val updateGit = git.updateGit(updateContribution)
-            commandGitPort.updateGit(updateGit)
+        gitAllInfo.forEachIndexed { index, gitInfo ->
+            val updateContribution = updateContributionMap[gitInfo.userId] ?: throw GitExceptions.NotFound()
+            val updatedGitInfo = gitInfo.updateGit(updateContribution, index + 1)
+            commandGitPort.updateGit(updatedGitInfo)
         }
     }
 }
