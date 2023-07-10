@@ -6,7 +6,7 @@ import com.xquare.git.github.spi.QueryGithubPort
 
 @UseCase
 class GetGithubAccessTokenUseCase(
-    private val queryGithubPort: QueryGithubPort
+    private val queryGithubPort: QueryGithubPort,
 ) {
     suspend fun execute(code: String): String {
         return queryGithubPort.getAccessToken(code).accessToken
