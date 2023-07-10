@@ -22,7 +22,6 @@ open class GitFacade(
     private val getGithubAccessTokenUseCase: GetGithubAccessTokenUseCase,
     private val getGithubUserInfoUseCase: GetGithubUserInfoUseCase,
 ) {
-    @Transactional
     open suspend fun saveUsername(currentUserId: String?, code: String) {
         val userId = getUserIdUseCase.execute(currentUserId)
         val token = getGithubAccessTokenUseCase.execute(code)
