@@ -13,9 +13,6 @@ import org.springframework.web.reactive.function.client.awaitBody
 class GithubPersistenceAdapter(
     private val webClient: WebClient,
 
-    @Value("\${service.scheme}")
-    private val scheme: String,
-
     @Value("\${auth.github.client-id}")
     private val clientId: String,
 
@@ -25,7 +22,7 @@ class GithubPersistenceAdapter(
     override suspend fun getAccessToken(code: String): TokenResponse {
         return webClient.get()
             .uri {
-                it.scheme(scheme)
+                it.scheme("https")
                     .host("github.com")
                     .path("/login/oauth/access_token")
                     .queryParam("client_id", clientId)
@@ -41,7 +38,7 @@ class GithubPersistenceAdapter(
     override suspend fun getGithubUserInfo(token: String): GetGithubUserInfoResponse {
         return webClient.get()
             .uri {
-                it.scheme(scheme)
+                it.scheme("https")
                     .host("api.github.com")
                     .path("/user")
                     .build()
