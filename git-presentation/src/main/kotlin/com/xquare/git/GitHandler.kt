@@ -16,8 +16,8 @@ class GitHandler(
     ) {
     suspend fun saveUsername(serverRequest: ServerRequest): ServerResponse {
         val currentUserId = serverRequest.headers().firstHeader("Request-User-Id")
-        val username = serverRequest.queryParam("username").orElse("")
-        gitFacade.saveUsername(currentUserId, username)
+        val code = serverRequest.queryParam("code").orElse("")
+        gitFacade.saveUsername(currentUserId, code)
 
         return ServerResponse.created(URI("/gits")).buildAndAwait()
     }
