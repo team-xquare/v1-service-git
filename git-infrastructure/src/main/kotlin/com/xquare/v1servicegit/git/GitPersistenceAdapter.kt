@@ -1,14 +1,11 @@
-package com.xquare.git.persistence.git.spi
+package com.xquare.v1servicegit.git
 
 import com.linecorp.kotlinjdsl.ReactiveQueryFactory
 import com.linecorp.kotlinjdsl.query.HibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
-import com.xquare.git.git.model.Git
-import com.xquare.git.git.spi.GitPort
-import com.xquare.git.persistence.git.mapper.GitMapper
-import com.xquare.git.persistence.git.model.GitEntity
+import com.xquare.v1servicegit.git.port.GitPort
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,17 +18,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.hibernate.reactive.mutiny.Mutiny.Session
 import org.jsoup.Jsoup
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class GitPersistenceAdapter(
     private val reactiveQueryFactory: HibernateMutinyReactiveQueryFactory,
-    private val gitMapper: GitMapper,
-
-    @Value("\${service.scheme}")
-    private val scheme: String
 ) : GitPort {
 
     companion object {
@@ -44,9 +36,8 @@ class GitPersistenceAdapter(
     private val scope = CoroutineScope(Dispatchers.IO + Job())
 
     override suspend fun saveUser(git: Git) {
-        val gitEntity = gitMapper.domainToEntity(git)
         reactiveQueryFactory.transactionWithFactory { session, _ ->
-            session.persistGitEntityConcurrently(gitEntity)
+            session.persistGitEntityConcurrently(git.domainToEntity())
         }
     }
 
@@ -59,13 +50,13 @@ class GitPersistenceAdapter(
     override suspend fun getAllGitByContributionCount(): List<Git> {
         return reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
             reactiveQueryFactory.findAllByContributionCount()
-        }.map { gitMapper.entityToDomain(it) }
+        }.map(GitEntity::entityToDomain)
     }
 
     override suspend fun getAllGit(): List<Git> {
         return reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
             reactiveQueryFactory.findAll()
-        }.map { gitMapper.entityToDomain(it) }
+        }.map(GitEntity::entityToDomain)
     }
 
     private suspend fun ReactiveQueryFactory.findAll(): List<GitEntity> {
@@ -87,7 +78,7 @@ class GitPersistenceAdapter(
         val gitEntity = reactiveQueryFactory.withFactory { _ ->
             findByUserId(userId)
         }
-        return gitEntity?.let { gitMapper.entityToDomain(it) }
+        return gitEntity?.let(GitEntity::entityToDomain)
     }
 
     private suspend fun findByUserId(userId: UUID): GitEntity? {
@@ -104,7 +95,7 @@ class GitPersistenceAdapter(
         val gitEntity = reactiveQueryFactory.withFactory { _ ->
             findByUsername(username)
         }
-        return gitEntity?.let { gitMapper.entityToDomain(it) }
+        return gitEntity?.let(GitEntity::entityToDomain)
     }
 
     private suspend fun findByUsername(username: String): GitEntity? {
@@ -118,7 +109,7 @@ class GitPersistenceAdapter(
     }
 
     override suspend fun updateGit(git: Git) {
-        val gitEntity = gitMapper.domainToEntity(git)
+        val gitEntity = git.domainToEntity()
         reactiveQueryFactory.transactionWithFactory { session, _ ->
             session.mergeUserEntity(gitEntity)
         }
