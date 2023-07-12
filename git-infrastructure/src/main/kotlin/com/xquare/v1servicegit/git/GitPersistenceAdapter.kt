@@ -47,32 +47,28 @@ class GitPersistenceAdapter(
         }
     }
 
-    override suspend fun getAllGitByContributionCount(): List<Git> {
-        return reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
+    override suspend fun getAllGitByContributionCount(): List<Git> =
+        reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
             reactiveQueryFactory.findAllByContributionCount()
         }.map(GitEntity::entityToDomain)
-    }
 
-    override suspend fun getAllGit(): List<Git> {
-        return reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
+    override suspend fun getAllGit(): List<Git> =
+        reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
             reactiveQueryFactory.findAll()
         }.map(GitEntity::entityToDomain)
-    }
 
-    private suspend fun ReactiveQueryFactory.findAll(): List<GitEntity> {
-        return this.selectQuery<GitEntity> {
+    private suspend fun ReactiveQueryFactory.findAll(): List<GitEntity> =
+        this.selectQuery<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
         }.resultList()
-    }
 
-    private suspend fun ReactiveQueryFactory.findAllByContributionCount(): List<GitEntity> {
-        return this.selectQuery<GitEntity> {
+    private suspend fun ReactiveQueryFactory.findAllByContributionCount(): List<GitEntity> =
+        this.selectQuery<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             orderBy(col(GitEntity::contributions).desc())
         }.resultList()
-    }
 
     override suspend fun getGitByUserId(userId: UUID): Git? {
         val gitEntity = reactiveQueryFactory.withFactory { _ ->
@@ -81,15 +77,14 @@ class GitPersistenceAdapter(
         return gitEntity?.let(GitEntity::entityToDomain)
     }
 
-    private suspend fun findByUserId(userId: UUID): GitEntity? {
-        return reactiveQueryFactory.singleQueryOrNull<GitEntity> {
+    private suspend fun findByUserId(userId: UUID): GitEntity? =
+        reactiveQueryFactory.singleQueryOrNull<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
                 col(GitEntity::userId).`in`(userId)
             )
         }
-    }
 
     override suspend fun getGitByUsername(username: String): Git? {
         val gitEntity = reactiveQueryFactory.withFactory { _ ->
@@ -98,15 +93,14 @@ class GitPersistenceAdapter(
         return gitEntity?.let(GitEntity::entityToDomain)
     }
 
-    private suspend fun findByUsername(username: String): GitEntity? {
-        return reactiveQueryFactory.singleQueryOrNull<GitEntity> {
+    private suspend fun findByUsername(username: String): GitEntity? =
+        reactiveQueryFactory.singleQueryOrNull<GitEntity> {
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
                 col(GitEntity::username).`in`(username)
             )
         }
-    }
 
     override suspend fun updateGit(git: Git) {
         val gitEntity = git.domainToEntity()
