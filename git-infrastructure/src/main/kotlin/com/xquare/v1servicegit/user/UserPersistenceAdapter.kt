@@ -18,7 +18,7 @@ class UserPersistenceAdapter(
     private val userHost: String,
 
     @Value("\${service.scheme}")
-    private val scheme: String
+    private val scheme: String,
 ) : UserPort {
 
     override suspend fun getNameAndProfileFileName(userId: UUID): FindUserInfoElement =

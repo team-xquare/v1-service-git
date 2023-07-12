@@ -5,7 +5,7 @@ import org.springframework.validation.FieldError
 
 data class ErrorResponse(
     val errorStatus: Int,
-    val errorMessage: Any
+    val errorMessage: Any,
 )
 
 fun BindingResult.of(): ErrorResponse {
@@ -15,6 +15,6 @@ fun BindingResult.of(): ErrorResponse {
 
     return ErrorResponse(
         errorStatus = 500,
-        errorMessage = errorMap
+        errorMessage = errorMap,
     )
 }
