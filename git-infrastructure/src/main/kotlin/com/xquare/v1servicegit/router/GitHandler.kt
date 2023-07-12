@@ -1,8 +1,9 @@
-package com.xquare.git
+package com.xquare.v1servicegit.router
 
-import com.xquare.git.git.dto.FindAllUserResponse
-import com.xquare.git.git.dto.FindUserElement
-import com.xquare.git.git.facade.GitFacade
+import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
+import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement
+import com.xquare.v1servicegit.git.facade.GitFacade
+import com.xquare.v1servicegit.user.aop.RequestHeaderAspect
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
@@ -12,10 +13,11 @@ import java.net.URI
 
 @Component
 class GitHandler(
+    private val requestHeaderAspect: RequestHeaderAspect,
     private val gitFacade: GitFacade,
-    ) {
+) {
     suspend fun saveUsername(serverRequest: ServerRequest): ServerResponse {
-        val currentUserId = serverRequest.headers().firstHeader("Request-User-Id")
+        val currentUserId = requestHeaderAspect.getCurrentUserId(serverRequest)
         val code = serverRequest.queryParam("code").orElse("")
         gitFacade.saveUsername(currentUserId, code)
 
@@ -28,8 +30,8 @@ class GitHandler(
     }
 
     suspend fun getCurrentGit(serverRequest: ServerRequest): ServerResponse {
-        val userId = serverRequest.headers().firstHeader("Request-User-Id")
-        val gitResponse: FindUserElement = gitFacade.findGitByCurrentUserId(userId)
+        val currentUserId = requestHeaderAspect.getCurrentUserId(serverRequest)
+        val gitResponse: FindUserElement = gitFacade.findGitByCurrentUserId(currentUserId)
         return ServerResponse.ok().bodyValueAndAwait(gitResponse)
     }
 
