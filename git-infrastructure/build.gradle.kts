@@ -12,9 +12,7 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation(project(":git-presentation"))
     implementation(project(":git-application"))
-    implementation(project(":git-domain"))
 
     implementationDependencies(Libraries.SpringBoot)
     implementationDependencies(Libraries.Kotlin)
