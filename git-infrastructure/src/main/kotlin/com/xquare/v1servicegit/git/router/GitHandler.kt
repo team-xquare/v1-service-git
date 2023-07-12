@@ -1,4 +1,4 @@
-package com.xquare.v1servicegit.router
+package com.xquare.v1servicegit.git.router
 
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement

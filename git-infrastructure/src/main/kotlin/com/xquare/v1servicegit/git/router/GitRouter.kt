@@ -1,4 +1,4 @@
-package com.xquare.v1servicegit.router
+package com.xquare.v1servicegit.git.router
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
