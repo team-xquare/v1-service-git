@@ -4,7 +4,7 @@
              version="2.2">
     <persistence-unit name="git-service-mysql">
         <provider>org.hibernate.reactive.provider.ReactivePersistenceProvider</provider>
-        <class>com.xquare.git.persistence.git.model.GitEntity</class>
+        <class>com.xquare.v1servicegit.git.GitEntity</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
     </persistence-unit>
 </persistence>

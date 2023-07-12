@@ -1,7 +1,7 @@
-package com.xquare.git.persistence.git.model
+package com.xquare.v1servicegit.git
 
 import org.jetbrains.annotations.NotNull
-import java.util.*
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -15,7 +15,7 @@ class GitEntity(
     @Column(columnDefinition = "BINARY(16)")
     val userId: UUID,
 
-    @field: NotNull
+    @field:NotNull
     val username: String,
 
     contributions: Int,
@@ -23,11 +23,11 @@ class GitEntity(
     ranking: Int,
 ) {
 
-    @field: NotNull
+    @field:NotNull
     var contributions: Int = contributions
         protected set
 
-    @field: NotNull
+    @field:NotNull
     var ranking: Int = ranking
         protected set
 }

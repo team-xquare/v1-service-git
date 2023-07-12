@@ -1,8 +1,8 @@
-package com.xquare.git.global.exceptions.handler
+package com.xquare.v1servicegit.common.exceptions.handler
 
-import com.xquare.git.exceptions.BaseException
-import com.xquare.git.exceptions.ExceptionAttribute
-import com.xquare.git.global.exceptions.GlobalExceptions
+import com.xquare.v1servicegit.common.exceptions.BaseException
+import com.xquare.v1servicegit.common.exceptions.ExceptionAttribute
+import com.xquare.v1servicegit.common.exceptions.GlobalExceptions
 import org.springframework.boot.autoconfigure.web.WebProperties
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
 import org.springframework.boot.web.reactive.error.ErrorAttributes
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono
 @Order(-2)
 @Component
 class ErrorWebExchangeHandler(
-    errorAttributes:ErrorAttributes,
+    errorAttributes: ErrorAttributes,
     webProperties: WebProperties,
     applicationContext: ApplicationContext,
     serverCodecConfigurer: ServerCodecConfigurer
@@ -49,10 +49,7 @@ class ErrorWebExchangeHandler(
         }
 
     private fun ExceptionAttribute.toErrorResponse() =
-        ServerResponse.status(this.statusCode)
-            .bodyValue(
-                ErrorResponse(
-                    statusCode, errorMessage
-                )
-            )
+        ServerResponse.status(this.statusCode).bodyValue(
+            ErrorResponse(statusCode, errorMessage),
+        )
 }
