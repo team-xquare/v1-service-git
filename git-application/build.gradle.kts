@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":git-domain"))
-
     implementationDependencies(Libraries.Transaction)
     implementationDependencies(Libraries.Component)
 }
