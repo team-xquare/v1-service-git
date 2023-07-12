@@ -1,8 +1,8 @@
-package com.xquare.git.persistence.github.spi
+package com.xquare.v1servicegit.github
 
-import com.xquare.git.github.dto.GetGithubUserInfoResponse
-import com.xquare.git.github.dto.TokenResponse
-import com.xquare.git.github.spi.GithubPort
+import com.xquare.v1servicegit.github.dto.GetGithubUserInfoResponse
+import com.xquare.v1servicegit.github.dto.TokenResponse
+import com.xquare.v1servicegit.github.port.GithubPort
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
@@ -19,8 +19,8 @@ class GithubPersistenceAdapter(
     @Value("\${auth.github.client-secret}")
     private val clientSecret: String,
 ) : GithubPort {
-    override suspend fun getAccessToken(code: String): TokenResponse {
-        return webClient.get()
+    override suspend fun getAccessToken(code: String): TokenResponse =
+        webClient.get()
             .uri {
                 it.scheme("https")
                     .host("github.com")
@@ -33,10 +33,9 @@ class GithubPersistenceAdapter(
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 
-    override suspend fun getGithubUserInfo(token: String): GetGithubUserInfoResponse {
-        return webClient.get()
+    override suspend fun getGithubUserInfo(token: String): GetGithubUserInfoResponse =
+        webClient.get()
             .uri {
                 it.scheme("https")
                     .host("api.github.com")
@@ -47,5 +46,4 @@ class GithubPersistenceAdapter(
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .awaitBody()
-    }
 }
