@@ -1,7 +1,5 @@
 rootProject.name = 'v1-service-git'
 include(
-        ":git-presentation",
         ":git-application",
-        ":git-domain",
         ":git-infrastructure"
 )
