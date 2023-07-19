@@ -81,7 +81,7 @@ class GitPersistenceAdapter(
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
-                col(GitEntity::userId).equal(userId)
+                col(GitEntity::userId).equal(userId),
             )
         }
 
@@ -97,7 +97,7 @@ class GitPersistenceAdapter(
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
-                col(GitEntity::username).equal(username)
+                col(GitEntity::username).equal(username),
             )
         }
 

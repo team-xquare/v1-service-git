@@ -55,7 +55,7 @@ class GitUseCase(
                 username = githubUserName,
                 contributions = contributions,
                 ranking = 0,
-            )
+            ),
         )
     }
 
