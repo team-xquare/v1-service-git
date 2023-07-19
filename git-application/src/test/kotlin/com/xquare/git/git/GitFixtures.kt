@@ -10,7 +10,7 @@ fun createGit(
     ranking: Int = 1,
 ) = Git(
     userId = id,
-    username =  username,
+    username = username,
     contributions = contributions,
-    ranking = ranking
+    ranking = ranking,
 )

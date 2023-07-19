@@ -4,8 +4,8 @@ import com.xquare.git.BaseApplicationTest
 import com.xquare.git.git.createGit
 import com.xquare.v1servicegit.git.Git
 import com.xquare.v1servicegit.git.dto.request.FindUserInfoRequest
-import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
+import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement
 import com.xquare.v1servicegit.git.port.QueryGitPort
 import com.xquare.v1servicegit.git.usecase.FindAllGitUseCase
 import com.xquare.v1servicegit.user.dto.FindUserInfoElement
@@ -39,7 +39,7 @@ class FindAllGitTest : BaseApplicationTest({
                     name = name,
                     profileFileName = profileFileName,
                 )
-            )
+            ),
         )
 
         it("Response를 반환한다.") {
@@ -54,8 +54,8 @@ class FindAllGitTest : BaseApplicationTest({
                         profileFileName = profileFileName,
                         contributions = userInfo.contributions,
                         ranking = userInfo.ranking,
-                    )
-                )
+                    ),
+                ),
             )
         }
     }
