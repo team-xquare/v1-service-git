@@ -1,4 +1,4 @@
-package com.xquare.v1servicegit.github.dto
+package com.xquare.v1servicegit.github.dto.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

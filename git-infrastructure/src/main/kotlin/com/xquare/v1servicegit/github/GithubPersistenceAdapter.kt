@@ -1,7 +1,7 @@
 package com.xquare.v1servicegit.github
 
-import com.xquare.v1servicegit.github.dto.GetGithubUserInfoResponse
-import com.xquare.v1servicegit.github.dto.TokenResponse
+import com.xquare.v1servicegit.github.dto.response.GetGithubUserInfoResponse
+import com.xquare.v1servicegit.github.dto.response.TokenResponse
 import com.xquare.v1servicegit.github.port.GithubPort
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
