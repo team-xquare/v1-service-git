@@ -1,5 +1,7 @@
 package com.xquare.v1servicegit.git.dto.response
 
+import com.xquare.v1servicegit.git.Git
+import com.xquare.v1servicegit.user.dto.response.FindUserListResponse.FindUserInfoElement
 import java.io.Serializable
 import java.util.UUID
 
@@ -15,3 +17,12 @@ data class FindAllUserResponse(
         val ranking: Int,
     )
 }
+
+fun Git.toUserElement(userInfo: FindUserInfoElement) = FindAllUserResponse.FindUserElement(
+    userId = this.userId,
+    name = userInfo.name,
+    username = this.username,
+    profileFileName = userInfo.profileFileName,
+    contributions = this.contributions,
+    ranking = this.ranking,
+)
