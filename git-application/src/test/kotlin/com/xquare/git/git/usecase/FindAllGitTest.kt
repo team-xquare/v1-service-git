@@ -38,7 +38,7 @@ class FindAllGitTest : BaseApplicationTest({
                     id = userInfo.userId,
                     name = name,
                     profileFileName = profileFileName,
-                )
+                ),
             ),
         )
 
