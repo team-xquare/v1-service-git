@@ -1,7 +1,7 @@
 package com.xquare.v1servicegit.git
 
 import com.xquare.v1servicegit.common.annotations.Aggregate
-import java.util.*
+import java.util.UUID
 
 @Aggregate
 data class Git(
