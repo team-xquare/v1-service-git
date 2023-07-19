@@ -1,6 +1,7 @@
 package com.xquare.v1servicegit.git.dto.response
 
 import com.xquare.v1servicegit.git.Git
+import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement
 import com.xquare.v1servicegit.user.dto.response.FindUserListResponse.FindUserInfoElement
 import java.io.Serializable
 import java.util.UUID
@@ -18,7 +19,7 @@ data class FindAllUserResponse(
     )
 }
 
-fun Git.toUserElement(userInfo: FindUserInfoElement) = FindAllUserResponse.FindUserElement(
+fun Git.toUserElement(userInfo: FindUserInfoElement) = FindUserElement(
     userId = this.userId,
     name = userInfo.name,
     username = this.username,
