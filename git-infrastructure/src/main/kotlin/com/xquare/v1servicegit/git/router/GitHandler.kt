@@ -1,8 +1,6 @@
 package com.xquare.v1servicegit.git.router
 
-import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
-import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement
-import com.xquare.v1servicegit.git.facade.GitFacade
+import com.xquare.v1servicegit.git.usecase.GitUseCase
 import com.xquare.v1servicegit.user.aop.RequestHeaderAspect
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -14,29 +12,29 @@ import java.net.URI
 @Component
 class GitHandler(
     private val requestHeaderAspect: RequestHeaderAspect,
-    private val gitFacade: GitFacade,
+    private val gitUseCase: GitUseCase,
 ) {
-    suspend fun saveUsername(serverRequest: ServerRequest): ServerResponse {
+    suspend fun saveGithubUserInfo(serverRequest: ServerRequest): ServerResponse {
         val currentUserId = requestHeaderAspect.getCurrentUserId(serverRequest)
         val code = serverRequest.queryParam("code").orElse("")
-        gitFacade.saveUsername(currentUserId, code)
+        gitUseCase.saveGithubUserInfo(currentUserId, code)
 
         return ServerResponse.created(URI("/gits")).buildAndAwait()
     }
 
-    suspend fun getAllGit(serverRequest: ServerRequest): ServerResponse {
-        val gitResponse: FindAllUserResponse = gitFacade.findAllGit()
-        return ServerResponse.ok().bodyValueAndAwait(gitResponse)
+    suspend fun getAllGithubInfo(serverRequest: ServerRequest): ServerResponse {
+        val allGithubInfo = gitUseCase.getAllGithubInfo()
+        return ServerResponse.ok().bodyValueAndAwait(allGithubInfo)
     }
 
-    suspend fun getCurrentGit(serverRequest: ServerRequest): ServerResponse {
+    suspend fun getMyGithubInfo(serverRequest: ServerRequest): ServerResponse {
         val currentUserId = requestHeaderAspect.getCurrentUserId(serverRequest)
-        val gitResponse: FindUserElement = gitFacade.findGitByCurrentUserId(currentUserId)
-        return ServerResponse.ok().bodyValueAndAwait(gitResponse)
+        val myGithubInfo = gitUseCase.getMyGithubInfo(currentUserId)
+        return ServerResponse.ok().bodyValueAndAwait(myGithubInfo)
     }
 
     suspend fun updateContributions(serverRequest: ServerRequest): ServerResponse {
-        gitFacade.updateContributions()
+        gitUseCase.updateGitInfo()
         return ServerResponse.noContent().buildAndAwait()
     }
 }
