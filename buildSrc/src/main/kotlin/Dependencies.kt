@@ -107,6 +107,16 @@ interface Libraries {
             KOTLINX_COROUTINE to ImplementationType.IMPLEMENTATION
         )
     }
+
+    object Test : Libraries {
+        private const val KOTEST = "io.kotest:kotest-runner-junit5:${DependencyVersions.KOTEST_VERSION}"
+        private const val MOCKK = "io.mockk:mockk:${DependencyVersions.MOCKK_VERSION}"
+
+        override fun dependencies() = listOf(
+            KOTEST to ImplementationType.TEST_IMPLEMENTATION,
+            MOCKK to ImplementationType.TEST_IMPLEMENTATION
+        )
+    }
 }
 
 object Dependencies {
