@@ -11,9 +11,9 @@ class GitRouter {
     fun gitBaseRouter(gitHandler: GitHandler) = coRouter {
         "/gits".nest {
             contentType(MediaType.APPLICATION_JSON)
-            POST("", gitHandler::saveUsername)
-            GET("/all", gitHandler::getAllGit)
-            GET("", gitHandler::getCurrentGit)
+            POST("", gitHandler::saveGithubUserInfo)
+            GET("/all", gitHandler::getAllGithubInfo)
+            GET("", gitHandler::getMyGithubInfo)
             PATCH("", gitHandler::updateContributions)
         }
     }

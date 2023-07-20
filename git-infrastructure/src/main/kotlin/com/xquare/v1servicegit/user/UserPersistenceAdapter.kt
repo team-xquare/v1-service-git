@@ -1,8 +1,8 @@
 package com.xquare.v1servicegit.user
 
 import com.xquare.v1servicegit.git.dto.request.FindUserInfoRequest
-import com.xquare.v1servicegit.user.dto.FindUserInfoElement
-import com.xquare.v1servicegit.user.dto.FindUserListResponse
+import com.xquare.v1servicegit.user.dto.response.FindUserListResponse
+import com.xquare.v1servicegit.user.dto.response.FindUserListResponse.FindUserInfoElement
 import com.xquare.v1servicegit.user.port.UserPort
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

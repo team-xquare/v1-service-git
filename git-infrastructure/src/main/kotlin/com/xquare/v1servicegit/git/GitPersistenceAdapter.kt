@@ -14,7 +14,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.hibernate.reactive.mutiny.Mutiny.Session
 import org.jsoup.Jsoup
@@ -82,7 +81,7 @@ class GitPersistenceAdapter(
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
-                col(GitEntity::userId).`in`(userId)
+                col(GitEntity::userId).equal(userId),
             )
         }
 
@@ -98,7 +97,7 @@ class GitPersistenceAdapter(
             select(entity(GitEntity::class))
             from(entity(GitEntity::class))
             where(
-                col(GitEntity::username).`in`(username)
+                col(GitEntity::username).equal(username),
             )
         }
 
@@ -127,19 +126,12 @@ class GitPersistenceAdapter(
         return contributionText.toInt()
     }
 
-    override suspend fun updateContributionCount(gitAllInfo: List<Git>): Map<UUID, Int> = runBlocking {
-        val updateContributionCount = mutableMapOf<UUID, Int>()
-        val deferredResults = gitAllInfo.map { git ->
-            scope.async {
+    override suspend fun updateContributionCount(gitAllInfo: List<Git>): Map<UUID, Int> = coroutineScope {
+        gitAllInfo.map { git ->
+            scope.async() {
                 val contribution = getContributionCount(git.username)
                 git.userId to contribution
             }
-        }
-
-        deferredResults.awaitAll().forEach { (userId, contribution) ->
-            updateContributionCount[userId] = contribution
-        }
-
-        updateContributionCount
+        }.awaitAll().associate { (userId, contribution) -> userId to contribution }
     }
 }
