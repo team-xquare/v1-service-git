@@ -1,0 +1,4 @@
+config:
+  name: git
+  prefix: /gits
+  service_type: be
