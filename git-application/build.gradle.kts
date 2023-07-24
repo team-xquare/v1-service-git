@@ -5,4 +5,5 @@ plugins {
 dependencies {
     implementationDependencies(Libraries.Transaction)
     implementationDependencies(Libraries.Component)
+    implementationDependencies(Libraries.Test)
 }

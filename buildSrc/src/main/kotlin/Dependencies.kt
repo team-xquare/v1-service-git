@@ -14,7 +14,7 @@ interface Libraries {
 
         override fun dependencies() = listOf(
             KOTLIN_REFLECT to ImplementationType.IMPLEMENTATION,
-            KOTLIN_STDLIB to ImplementationType.IMPLEMENTATION
+            KOTLIN_STDLIB to ImplementationType.IMPLEMENTATION,
         )
     }
 
@@ -34,7 +34,7 @@ interface Libraries {
             KOTLIN_JDSL to ImplementationType.IMPLEMENTATION,
             REACTIVE_MYSQL to ImplementationType.IMPLEMENTATION,
             REACTIVE_HIBERNATE to ImplementationType.IMPLEMENTATION,
-            SPRING_DATA_COMMON to ImplementationType.IMPLEMENTATION
+            SPRING_DATA_COMMON to ImplementationType.IMPLEMENTATION,
         )
     }
 
@@ -43,7 +43,7 @@ interface Libraries {
             "com.fasterxml.jackson.module:jackson-module-kotlin:${DependencyVersions.JACKSON_VERSION}"
 
         override fun dependencies() = listOf(
-            MODULE_KOTLIN to ImplementationType.IMPLEMENTATION
+            MODULE_KOTLIN to ImplementationType.IMPLEMENTATION,
         )
     }
 
@@ -51,7 +51,7 @@ interface Libraries {
         private const val SPRING_TRANSACTION = "org.springframework:spring-tx:${DependencyVersions.SPRING_TRANSACTION}"
 
         override fun dependencies() = listOf(
-            SPRING_TRANSACTION to ImplementationType.IMPLEMENTATION
+            SPRING_TRANSACTION to ImplementationType.IMPLEMENTATION,
         )
     }
 
@@ -59,7 +59,7 @@ interface Libraries {
         private const val SPRING_COMPONENT = "org.springframework:spring-context:${DependencyVersions.SPRING_COMPONENT}"
 
         override fun dependencies() = listOf(
-            SPRING_COMPONENT to ImplementationType.IMPLEMENTATION
+            SPRING_COMPONENT to ImplementationType.IMPLEMENTATION,
         )
     }
 
@@ -79,7 +79,7 @@ interface Libraries {
         private const val CLOUD_CONFIG = "org.springframework.cloud:spring-cloud-config-client"
 
         override fun dependencies() = listOf(
-            CLOUD_CONFIG to ImplementationType.IMPLEMENTATION
+            CLOUD_CONFIG to ImplementationType.IMPLEMENTATION,
         )
     }
 
@@ -104,7 +104,17 @@ interface Libraries {
             REACTOR_COROUTINE_EXTENSION to ImplementationType.IMPLEMENTATION,
             COROUTINE_REACTOR to ImplementationType.IMPLEMENTATION,
             COROUTINE_JDK to ImplementationType.RUNTIME_ONLY,
-            KOTLINX_COROUTINE to ImplementationType.IMPLEMENTATION
+            KOTLINX_COROUTINE to ImplementationType.IMPLEMENTATION,
+        )
+    }
+
+    object Test : Libraries {
+        private const val KOTEST = "io.kotest:kotest-runner-junit5:${DependencyVersions.KOTEST_VERSION}"
+        private const val MOCKK = "io.mockk:mockk:${DependencyVersions.MOCKK_VERSION}"
+
+        override fun dependencies() = listOf(
+            KOTEST to ImplementationType.TEST_IMPLEMENTATION,
+            MOCKK to ImplementationType.TEST_IMPLEMENTATION,
         )
     }
 }
