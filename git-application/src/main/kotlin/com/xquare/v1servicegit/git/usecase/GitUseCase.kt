@@ -4,6 +4,7 @@ import com.xquare.v1servicegit.common.annotations.UseCase
 import com.xquare.v1servicegit.git.Git
 import com.xquare.v1servicegit.git.dto.request.FindUserInfoRequest
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
+import com.xquare.v1servicegit.git.dto.response.IsConnectedGithubOauthResponse
 import com.xquare.v1servicegit.git.dto.response.toUserElement
 import com.xquare.v1servicegit.git.exceptions.GitExceptions
 import com.xquare.v1servicegit.git.port.CommandGitPort
@@ -71,4 +72,10 @@ class GitUseCase(
             )
         }
     }
+
+    suspend fun isConnectedGithubOauthByUserId(userId: UUID): IsConnectedGithubOauthResponse =
+        when (queryGitPort.isExistGitUserByUserId(userId)) {
+            true -> IsConnectedGithubOauthResponse(true)
+            false -> IsConnectedGithubOauthResponse(false)
+        }
 }
