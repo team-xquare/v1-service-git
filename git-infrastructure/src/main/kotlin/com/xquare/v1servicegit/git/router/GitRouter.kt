@@ -14,6 +14,7 @@ class GitRouter {
             POST("", gitHandler::saveGithubUserInfo)
             GET("/all", gitHandler::getAllGithubInfo)
             GET("", gitHandler::getMyGithubInfo)
+            GET("/exist", gitHandler::isConnectedGithubOauthByUserId)
             PATCH("", gitHandler::updateContributions)
         }
     }
