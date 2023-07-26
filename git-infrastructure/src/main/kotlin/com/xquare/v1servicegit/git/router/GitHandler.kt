@@ -37,4 +37,10 @@ class GitHandler(
         gitUseCase.updateGitInfo()
         return ServerResponse.noContent().buildAndAwait()
     }
+
+    suspend fun isConnectedGithubOauthByUserId(serverRequest: ServerRequest): ServerResponse {
+        val currentUserId = requestHeaderAspect.getCurrentUserId(serverRequest)
+        val isConnectedGithubOauth = gitUseCase.isConnectedGithubOauthByUserId(currentUserId)
+        return ServerResponse.ok().bodyValueAndAwait(isConnectedGithubOauth)
+    }
 }
