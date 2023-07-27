@@ -27,6 +27,7 @@ class SecurityConfiguration {
             .pathMatchers(HttpMethod.POST, "/gits").permitAll()
             .pathMatchers(HttpMethod.GET, "/gits").permitAll()
             .pathMatchers(HttpMethod.GET, "/gits/all").permitAll()
+            .pathMatchers(HttpMethod.GET, "/gits/exist").permitAll()
             .pathMatchers(HttpMethod.PATCH, "/gits").permitAll()
             .anyExchange().authenticated()
             .and()

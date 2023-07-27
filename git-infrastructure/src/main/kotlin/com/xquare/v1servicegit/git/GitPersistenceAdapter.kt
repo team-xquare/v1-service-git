@@ -5,6 +5,7 @@ import com.linecorp.kotlinjdsl.query.HibernateMutinyReactiveQueryFactory
 import com.linecorp.kotlinjdsl.query.singleQueryOrNull
 import com.linecorp.kotlinjdsl.querydsl.expression.col
 import com.linecorp.kotlinjdsl.selectQuery
+import com.linecorp.kotlinjdsl.singleQueryOrNull
 import com.xquare.v1servicegit.git.port.GitPort
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import kotlinx.coroutines.CoroutineScope
@@ -134,4 +135,15 @@ class GitPersistenceAdapter(
             }
         }.awaitAll().associate { (userId, contribution) -> userId to contribution }
     }
+
+    override suspend fun isExistGitUserByUserId(userId: UUID): Boolean =
+        reactiveQueryFactory.withFactory { _, reactiveQueryFactory ->
+            reactiveQueryFactory.singleQueryOrNull<UUID> {
+                select(col(GitEntity::userId))
+                from(entity(GitEntity::class))
+                where(
+                    col(GitEntity::userId).equal(userId),
+                )
+            } != null
+        }
 }
