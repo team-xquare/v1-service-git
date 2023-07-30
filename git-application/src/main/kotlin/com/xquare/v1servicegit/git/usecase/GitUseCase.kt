@@ -22,7 +22,7 @@ class GitUseCase(
 ) {
 
     suspend fun getAllGithubInfo(): FindAllUserResponse {
-        val gitInfoList = queryGitPort.getAllGit()
+        val gitInfoList = queryGitPort.getAllGitByContributionCount()
         val userIds = gitInfoList.map { it.userId }
         val userInfoRequest = FindUserInfoRequest(userIds)
         val gitUserInfoList = queryUserPort.getAllUserInfo(userInfoRequest).users
