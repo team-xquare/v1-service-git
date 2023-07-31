@@ -5,18 +5,24 @@ import com.xquare.git.git.createGit
 import com.xquare.v1servicegit.git.exceptions.GitExceptions
 import com.xquare.v1servicegit.git.port.CommandGitPort
 import com.xquare.v1servicegit.git.port.QueryGitPort
-import com.xquare.v1servicegit.git.usecase.UpdateGitUseCase
+import com.xquare.v1servicegit.git.usecase.GitUseCase
+import com.xquare.v1servicegit.github.port.QueryGithubPort
+import com.xquare.v1servicegit.user.port.QueryUserPort
 import io.kotest.assertions.throwables.shouldThrow
 import io.mockk.coEvery
 import io.mockk.mockk
 
 class UpdateGitTest : BaseApplicationTest({
-    val queryGitPort: QueryGitPort = mockk()
     val commandGitPort: CommandGitPort = mockk()
+    val queryGitPort: QueryGitPort = mockk()
+    val queryGithubPort: QueryGithubPort = mockk()
+    val queryUserPort: QueryUserPort = mockk()
 
-    val updateGitUseCase = UpdateGitUseCase(
-        queryGitPort = queryGitPort,
+    val gitUseCase = GitUseCase(
         commandGitPort = commandGitPort,
+        queryGitPort = queryGitPort,
+        queryGithubPort = queryGithubPort,
+        queryUserPort = queryUserPort,
     )
 
     describe("모든 깃허브 정보를 불러올 때") {
@@ -31,7 +37,7 @@ class UpdateGitTest : BaseApplicationTest({
 
             it("예외를 던진다.") {
                 shouldThrow<GitExceptions.NotFound> {
-                    updateGitUseCase.execute()
+                    gitUseCase.updateGitInfo()
                 }
             }
         }
@@ -41,7 +47,7 @@ class UpdateGitTest : BaseApplicationTest({
         coEvery { commandGitPort.updateGit(userInfo) } returns Unit
 
         it("값을 업데이트한다.") {
-            updateGitUseCase.execute()
+            gitUseCase.updateGitInfo()
         }
     }
 })

@@ -4,9 +4,11 @@ import com.xquare.git.BaseApplicationTest
 import com.xquare.git.git.createGit
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
 import com.xquare.v1servicegit.git.exceptions.GitExceptions
+import com.xquare.v1servicegit.git.port.CommandGitPort
 import com.xquare.v1servicegit.git.port.QueryGitPort
-import com.xquare.v1servicegit.git.usecase.FindGitByCurrentUserIdUseCase
-import com.xquare.v1servicegit.user.dto.FindUserInfoElement
+import com.xquare.v1servicegit.git.usecase.GitUseCase
+import com.xquare.v1servicegit.github.port.QueryGithubPort
+import com.xquare.v1servicegit.user.dto.response.FindUserListResponse.FindUserInfoElement
 import com.xquare.v1servicegit.user.port.QueryUserPort
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -14,11 +16,15 @@ import io.mockk.coEvery
 import io.mockk.mockk
 
 class FindGitByCurrentUserIdTest : BaseApplicationTest({
+    val commandGitPort: CommandGitPort = mockk()
     val queryGitPort: QueryGitPort = mockk()
+    val queryGithubPort: QueryGithubPort = mockk()
     val queryUserPort: QueryUserPort = mockk()
 
-    val findGitByCurrentUserIdUseCase = FindGitByCurrentUserIdUseCase(
+    val gitUseCase = GitUseCase(
+        commandGitPort = commandGitPort,
         queryGitPort = queryGitPort,
+        queryGithubPort = queryGithubPort,
         queryUserPort = queryUserPort,
     )
 
@@ -33,7 +39,7 @@ class FindGitByCurrentUserIdTest : BaseApplicationTest({
 
             it("예외를 던진다.") {
                 shouldThrow<GitExceptions.NotFound> {
-                    findGitByCurrentUserIdUseCase.execute(userInfo.userId)
+                    gitUseCase.getMyGithubInfo(userInfo.userId)
                 }
             }
         }
@@ -46,7 +52,7 @@ class FindGitByCurrentUserIdTest : BaseApplicationTest({
         )
 
         it("Response를 반환한다.") {
-            val result = findGitByCurrentUserIdUseCase.execute(userInfo.userId)
+            val result = gitUseCase.getMyGithubInfo(userInfo.userId)
 
             result shouldBe FindAllUserResponse.FindUserElement(
                 userId = userInfo.userId,
