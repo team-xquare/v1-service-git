@@ -6,21 +6,27 @@ import com.xquare.v1servicegit.git.Git
 import com.xquare.v1servicegit.git.dto.request.FindUserInfoRequest
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse
 import com.xquare.v1servicegit.git.dto.response.FindAllUserResponse.FindUserElement
+import com.xquare.v1servicegit.git.port.CommandGitPort
 import com.xquare.v1servicegit.git.port.QueryGitPort
-import com.xquare.v1servicegit.git.usecase.FindAllGitUseCase
-import com.xquare.v1servicegit.user.dto.FindUserInfoElement
-import com.xquare.v1servicegit.user.dto.FindUserListResponse
+import com.xquare.v1servicegit.git.usecase.GitUseCase
+import com.xquare.v1servicegit.github.port.QueryGithubPort
+import com.xquare.v1servicegit.user.dto.response.FindUserListResponse
+import com.xquare.v1servicegit.user.dto.response.FindUserListResponse.FindUserInfoElement
 import com.xquare.v1servicegit.user.port.QueryUserPort
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
 
 class FindAllGitTest : BaseApplicationTest({
+    val commandGitPort: CommandGitPort = mockk()
     val queryGitPort: QueryGitPort = mockk()
+    val queryGithubPort: QueryGithubPort = mockk()
     val queryUserPort: QueryUserPort = mockk()
 
-    val findAllGitUseCase = FindAllGitUseCase(
+    val gitUseCase = GitUseCase(
+        commandGitPort = commandGitPort,
         queryGitPort = queryGitPort,
+        queryGithubPort = queryGithubPort,
         queryUserPort = queryUserPort,
     )
 
@@ -43,7 +49,7 @@ class FindAllGitTest : BaseApplicationTest({
         )
 
         it("Response를 반환한다.") {
-            val result = findAllGitUseCase.execute()
+            val result = gitUseCase.getAllGithubInfo()
 
             result shouldBe FindAllUserResponse(
                 listOf(
