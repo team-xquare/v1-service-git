@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 class GitScheduler(
     private val gitUseCase: GitUseCase,
 ) {
-    @Scheduled(cron = "* 3 * * * *")
+    @Scheduled(cron = "* 30 * * * *")
     fun gitScheduler() {
         runBlocking { gitUseCase.updateGitInfo() }
         logger().info("update success")
