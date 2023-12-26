@@ -129,7 +129,7 @@ class GitPersistenceAdapter(
 
     override suspend fun updateContributionCount(gitAllInfo: List<Git>): Map<UUID, Int> = coroutineScope {
         gitAllInfo.map { git ->
-            scope.async() {
+            scope.async {
                 val contribution = getContributionCount(git.username)
                 git.userId to contribution
             }
